@@ -1,0 +1,36 @@
+{
+  "plugins": [
+    "react-native"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react-native/all",
+    "plugin:react-hooks/recommended"
+  ],
+  "parser": "@babel/eslint-parser",
+  "env": {
+    "es6": true,
+    "react-native/react-native": true
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "react-native/no-unused-styles": 0,
+    "react-native/split-platform-components": 2,
+    "react-native/no-inline-styles": 0,
+    "react-native/no-color-literals": 0,
+    "react-native/no-raw-text": 2,
+    "react/jsx-uses-react": "warn",
+    "react/jsx-uses-vars": "warn",
+    "no-unused-vars": "warn",
+    "react/prop-types": 0,
+    "react-hooks/rules-of-hooks": "warn",
+    "react-hooks/exhaustive-deps": "warn"
+  }
+}
