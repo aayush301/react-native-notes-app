@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "react-native-notes-app",
+    "name": "Notes app",
     "slug": "react-native-notes-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -21,6 +21,8 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.notes",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

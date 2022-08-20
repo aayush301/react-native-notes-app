@@ -13,7 +13,7 @@ export default function App() {
         <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: theme.PRIMARY_COLOR }, headerTintColor: "white" }}>
           <Stack.Screen name="Home" component={screens.Home} options={{ headerShown: false }} />
           <Stack.Screen name="AddNote" component={screens.AddNote} options={{ title: "New note" }} />
-          <Stack.Screen name="UpdateNote" component={screens.UpdateNote} options={{ title: "Edit note" }} />
+          <Stack.Screen name="UpdateNote" component={screens.UpdateNote} options={{ title: "Note" }} />
         </Stack.Navigator>
       </NavigationContainer>
     </GlobalContextProvider>

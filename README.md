@@ -13,31 +13,39 @@ A notes app built using React native for cross-platform mobile devices.
 
 ## Features
 ### User-oriented features
-- Add note
+- Add notes
 - View notes
 - Update notes
+- Select multiple notes
 - Delete notes
 - Search notes
-- Select multiple notes
+- Copy notes
+- Share notes
+- Clone notes
+- Bookmark notes
+- Pin notes
+- Color notes
 
 ### Developer-oriented features
 - Android ripple effect
-- Custom Back button handler
+- Conditional addition of property to object (JS concept)
+- Custom Back button handlers
 - Custom header when notes are in selected state
+- Delete confirmation
 - Global state for notes using React's context
 - Multiple notes can be selected using "long pressing" a note (feature desirable in mobile devices)
 - Persisting taps on notes while keyboard input is active
-- Use of React hooks
 - Use of async storage library for storing notes data in user's device
-- Use of react navigation library for making multiple screens
+- Use of React hooks
+- Use of React navigation library for making multiple screens
+- Use of ScrollView for scrollable components
+- Use of Toast in android
 
 
 ## Tools and Technologies
-- HTML
-- CSS
-- Node.js
 - React
 - React Native
+- CSS
 - Eslint
 
 
