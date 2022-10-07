@@ -1,14 +1,15 @@
-import { BackHandler, FlatList, Text, View } from 'react-native'
+import { Alert, BackHandler, FlatList, Text, ToastAndroid, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { useGlobalContext } from '../context/context';
 import theme from '../style/theme';
 import { useEffect } from 'react';
 import React from 'react';
 import NoteCard from './NoteCard';
+import { storeData } from '../utils/storage';
 
 
 const Notes = ({ selectedNotes, setSelectedNotes, filteredNotes, isSearchMode, setIsSearchMode, searchValue }) => {
-  const { notes } = useGlobalContext();
+  const { notes, setNotes } = useGlobalContext();
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -53,6 +54,18 @@ const Notes = ({ selectedNotes, setSelectedNotes, filteredNotes, isSearchMode, s
   }
 
 
+  const deleteNote = async (noteId) => {
+    try {
+      const newNotesArr = notes.filter(note => note.id !== noteId);
+      await storeData("notes", newNotesArr);
+      setNotes(newNotesArr);
+      ToastAndroid.show("Note deleted successfully", ToastAndroid.SHORT);
+    }
+    catch (err) {
+      Alert.alert("Error", "Some error is there!!");
+    }
+  }
+
 
   const getFlatList = notes => {
     const notesCopy = [...notes.filter(note => note.isPinned), ...notes.filter(note => !note.isPinned)];
@@ -60,7 +73,7 @@ const Notes = ({ selectedNotes, setSelectedNotes, filteredNotes, isSearchMode, s
       keyboardShouldPersistTaps="handled"
       data={notesCopy}
       keyExtractor={note => note.id}
-      renderItem={({ item: note }) => <NoteCard note={note} {...{ handlePress, handleLongPress }} isAddedInSelection={selectedNotes.includes(note.id)} />}
+      renderItem={({ item: note }) => <NoteCard {...{ note, handlePress, handleLongPress, deleteNote }} isAddedInSelection={selectedNotes.includes(note.id)} />}
     />
   }
 
@@ -78,7 +91,7 @@ const Notes = ({ selectedNotes, setSelectedNotes, filteredNotes, isSearchMode, s
         <View>
           {searchValue === "" || filteredNotes === null ? (
             <>
-              <Text style={{ color: theme.PRIMARY_COLOR, paddingHorizontal: 10, paddingVertical: 20 }}>{notes.length} note{notes.length > 1 && 's'}</Text>
+              <Text style={{ color: theme.PRIMARY_COLOR, fontWeight: "600", fontSize: 15, paddingHorizontal: 10, paddingVertical: 20, borderBottomWidth: 1, borderBottomColor: "#efefef" }}>{notes.length} note{notes.length > 1 && 's'}</Text>
               {getFlatList(notes)}
             </>
           ) : filteredNotes.length === 0 ? (

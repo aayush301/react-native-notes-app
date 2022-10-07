@@ -38,7 +38,8 @@ const AddNote = () => {
         text: formData.text,
         color: "white",
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        labels: []
       }
       const newNotesArr = [newNote, ...notes];
       await storeData("notes", newNotesArr);

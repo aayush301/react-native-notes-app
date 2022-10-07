@@ -1,15 +1,14 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native';
 import theme from '../style/theme';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const AddButton = () => {
   const navigation = useNavigation();
   return (
     <Pressable onPress={() => navigation.navigate("AddNote")} style={styles.buttonStyle} android_ripple={{ color: "#ccc", radius: 25 }}>
-      <View>
-        <Text style={{ fontSize: 25, color: "white" }}>+</Text>
-      </View>
+      <Icon name="add-outline" size={30} color="white" />
     </Pressable>
   )
 }

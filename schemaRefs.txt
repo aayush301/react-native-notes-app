@@ -1,0 +1,9 @@
+Note
+  id
+  text
+  color
+  createdAt
+  updatedAt
+  isBookmarked
+  isPinned
+  labels: []

@@ -4,8 +4,14 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { useGlobalContext } from '../context/context';
 import { storeData } from '../utils/storage';
 import theme from '../style/theme';
+import { getDefaultHeaderHeight } from '@react-navigation/elements';
+import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const NotesPageHeader = ({ selectedNotes, setSelectedNotes, setFilteredNotes, isSearchMode, setIsSearchMode, searchValue, setSearchValue }) => {
+
+  const frame = useSafeAreaFrame();
+  const insets = useSafeAreaInsets();
+  const headerHeight = getDefaultHeaderHeight(frame, false, insets.top);
   const { notes, setNotes } = useGlobalContext();
 
   // useFocusEffect(useCallback(() => {
@@ -46,7 +52,7 @@ const NotesPageHeader = ({ selectedNotes, setSelectedNotes, setFilteredNotes, is
 
 
   return (
-    <View style={{ height: 90, paddingTop: 30, backgroundColor: !isSearchMode ? theme.PRIMARY_COLOR : "white", justifyContent: "center" }}>
+    <View style={{ height: headerHeight, paddingTop: insets.top, backgroundColor: !isSearchMode ? theme.PRIMARY_COLOR : "white", justifyContent: "center" }}>
 
       {!isSearchMode ? (
         <>

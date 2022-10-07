@@ -1,6 +1,6 @@
 import { Alert, Pressable, Text, TextInput, View, ToastAndroid, Share, StyleSheet, ScrollView, BackHandler } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import { storeData } from '../utils/storage';
 import { useGlobalContext } from '../context/context';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -18,6 +18,7 @@ const UpdateNote = () => {
   const [formData, setFormData] = useState({
     text: ""
   });
+  const isFocussed = useIsFocused();
 
   useEffect(() => {
     setNote(notes.find(note => note.id === noteId));
@@ -29,13 +30,14 @@ const UpdateNote = () => {
 
   useEffect(() => {
     const backAction = () => {
+      if (!isFocussed) return false;
       if (formData.text === "" || formData.text === note.text) return false;
       Alert.alert("Your changes have not been saved.", "Do you want to save it?", [{ text: "Yes", onPress: updateNote }, { text: "No", onPress: navigation.goBack }], { cancelable: true });
       return true;
     }
     BackHandler.addEventListener("hardwareBackPress", backAction);
     return () => BackHandler.removeEventListener("hardwareBackPress", backAction);
-  }, [formData, navigation, updateNote, note.text]);
+  }, [isFocussed, formData, navigation, updateNote, note.text]);
 
 
 
@@ -124,7 +126,8 @@ const UpdateNote = () => {
         id: Math.floor(Math.random() * 10000),
         text: formData.text,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        labels: note.labels
       }
       const newNotesArr = [newNote, ...notes];
       await storeData("notes", newNotesArr);
@@ -157,7 +160,13 @@ const UpdateNote = () => {
   return (
     <View style={{ flex: 1 }}>
       <View style={{ flex: 1, backgroundColor: "#f5f5f5" }}>
-        <TextInput value={formData.text} onChangeText={text => handleChange("text", text)} multiline={true} autoFocus style={{ padding: 20, fontSize: 16, color: "#555" }} placeholder="Your note" />
+        <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", paddingHorizontal: 15, paddingVertical: 10 }}>
+          {note.labels?.map(label => (
+            <Text key={label} style={{ margin: 5, padding: 5, backgroundColor: "#eee", color: "#666", borderRadius: 3, fontSize: 15 }}>{label}</Text>
+          ))}
+        </View>
+
+        <TextInput value={formData.text} onChangeText={text => handleChange("text", text)} multiline={true} autoFocus style={{ padding: 20, paddingTop: 0, fontSize: 16, color: "#555" }} placeholder="Your note" />
       </View>
 
       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", backgroundColor: "#ddd", paddingVertical: 4, paddingHorizontal: 15 }}>
@@ -165,7 +174,7 @@ const UpdateNote = () => {
         <Pressable onPress={toggleBookmark} android_ripple={{ color: "#ccc", radius: 30 }}>
           <Icon name={note.isBookmarked ? "bookmark" : "bookmark-outline"} size={25} color="#444" style={{ padding: 5 }} />
         </Pressable>
-        <Pressable onPress={() => SheetManager.show("mysheet")} android_ripple={{ color: "#ccc", radius: 30 }}>
+        <Pressable onPress={() => SheetManager.show("noteOptionsActionSheet")} android_ripple={{ color: "#ccc", radius: 30 }}>
           <Icon name="ellipsis-vertical" size={25} color="#444" style={{ padding: 5 }} />
         </Pressable>
       </View>
@@ -173,9 +182,9 @@ const UpdateNote = () => {
 
       <SaveButton onPress={updateNote} bottom={50} />
 
-      <ActionSheet id="mysheet" defaultOverlayOpacity={0.1} openAnimationSpeed={50} gestureEnabled indicatorStyle={{ height: 5 }}>
+      <ActionSheet id="noteOptionsActionSheet" defaultOverlayOpacity={0.1} openAnimationSpeed={50} gestureEnabled indicatorStyle={{ height: 5 }}>
         <View>
-          <ScrollView horizontal contentContainerStyle={{ paddingVertical: 10, paddingHorizontal: 5, borderBottomColor: "#eee", borderBottomWidth: 1 }}>
+          <ScrollView horizontal contentContainerStyle={{ paddingVertical: 10, paddingHorizontal: 5 }}>
             {noteColors.map(color => (
               <Pressable onPress={() => changeNoteColor(color)} key={color} style={{ marginHorizontal: 5, borderRadius: 50, width: 35, height: 35, backgroundColor: color, justifyContent: "center", alignItems: "center", ...(color === "white" && { borderWidth: 1, borderColor: "#eee" }) }}>
                 {note.color === color && (
@@ -184,6 +193,19 @@ const UpdateNote = () => {
               </Pressable>
             ))}
           </ScrollView>
+
+          <View style={{ borderColor: "#eee", borderBottomWidth: 1 }} />
+
+          <ScrollView horizontal contentContainerStyle={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 5, paddingVertical: 10 }}>
+            {note.labels?.map(label => (
+              <Text key={label} style={{ margin: 5, padding: 5, backgroundColor: "#eee", color: "#666", borderRadius: 3, fontSize: 15 }}>{label}</Text>
+            ))}
+            <Pressable onPress={() => { SheetManager.hide("noteOptionsActionSheet"); navigation.navigate("NoteLabels", { noteId }); }} style={{ marginLeft: 14, backgroundColor: "#eee", paddingVertical: 5, paddingHorizontal: 8, borderRadius: 3 }} android_ripple={{ color: "#bbb", radius: 200 }} >
+              <Text style={{ fontWeight: "500", color: "#666", fontSize: 15 }}>+ Manage labels</Text>
+            </Pressable>
+          </ScrollView>
+
+          <View style={{ borderColor: "#eee", borderBottomWidth: 1 }} />
 
           {[
             { onPress: copyToClipboard, iconName: "clipboard-outline", title: "Copy to Clipboard" },
@@ -200,6 +222,7 @@ const UpdateNote = () => {
             ))}
         </View>
       </ActionSheet>
+
     </View>
   )
 }

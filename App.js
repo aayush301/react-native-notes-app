@@ -14,6 +14,7 @@ export default function App() {
           <Stack.Screen name="Home" component={screens.Home} options={{ headerShown: false }} />
           <Stack.Screen name="AddNote" component={screens.AddNote} options={{ title: "New note" }} />
           <Stack.Screen name="UpdateNote" component={screens.UpdateNote} options={{ title: "Note" }} />
+          <Stack.Screen name="NoteLabels" component={screens.NoteLabels} options={{ title: "Manage labels" }} />
         </Stack.Navigator>
       </NavigationContainer>
     </GlobalContextProvider>
