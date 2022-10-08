@@ -4,12 +4,14 @@ import { GlobalContextProvider } from './context/context';
 import theme from './style/theme';
 import * as screens from './screens';
 import React from 'react'
+import useNotifications from './Notifications/useNotifications';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
+  const navRef = useNotifications();
   return (
     <GlobalContextProvider>
-      <NavigationContainer>
+      <NavigationContainer ref={navRef}>
         <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: theme.PRIMARY_COLOR }, headerTintColor: "white" }}>
           <Stack.Screen name="Home" component={screens.Home} options={{ headerShown: false }} />
           <Stack.Screen name="AddNote" component={screens.AddNote} options={{ title: "New note" }} />

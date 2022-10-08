@@ -1,32 +1,30 @@
-import { Alert, Pressable, Text, TextInput, View, ToastAndroid, Share, StyleSheet, ScrollView, BackHandler } from 'react-native'
+import { Alert, Pressable, Text, TextInput, View, ToastAndroid, BackHandler } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import { storeData } from '../utils/storage';
 import { useGlobalContext } from '../context/context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { convertToXTimeAgo } from '../utils/dateformat';
-import * as Clipboard from 'expo-clipboard';
-import ActionSheet, { SheetManager } from "react-native-actions-sheet";
+import { SheetManager } from "react-native-actions-sheet";
 import SaveButton from '../components/SaveButton';
+import NoteOptionsActionSheet from '../components/NoteOptionsActionSheet';
+import moment from 'moment';
+import NoteReminderModal from '../components/NoteReminderModal';
 
 const UpdateNote = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const noteId = route.params.id;
-  const { notes, setNotes } = useGlobalContext();
-  const [note, setNote] = useState({});
-  const [formData, setFormData] = useState({
-    text: ""
-  });
   const isFocussed = useIsFocused();
+  const { notes, setNotes } = useGlobalContext();
+  const [formData, setFormData] = useState({ text: "" });
+  const [noteReminderModal, setNoteReminderModal] = useState(false);
 
-  useEffect(() => {
-    setNote(notes.find(note => note.id === noteId));
-  }, [notes, noteId]);
+  const noteId = route.params.id;
+  const note = notes.find(note => note.id === noteId);
 
   useEffect(() => {
     setFormData({ text: note.text || "" });
-  }, [note]);
+  }, [note.text]);
 
   useEffect(() => {
     const backAction = () => {
@@ -38,10 +36,6 @@ const UpdateNote = () => {
     BackHandler.addEventListener("hardwareBackPress", backAction);
     return () => BackHandler.removeEventListener("hardwareBackPress", backAction);
   }, [isFocussed, formData, navigation, updateNote, note.text]);
-
-
-
-  const noteColors = ["white", "lightseagreen", "skyblue", "lightcoral", "lightpink", "lightgreen", "lightblue", "orange", "palegreen"];
 
 
   const handleChange = (name, value) => {
@@ -66,32 +60,6 @@ const UpdateNote = () => {
   }, [formData, notes, setNotes, navigation, noteId]);
 
 
-  const onDeleteConfirm = async () => {
-    try {
-      const newNotesArr = notes.filter(note => note.id !== noteId);
-      await storeData("notes", newNotesArr);
-      setNotes(newNotesArr);
-      navigation.navigate("Home");
-      ToastAndroid.show("Note deleted successfully", ToastAndroid.SHORT);
-    }
-    catch (err) {
-      Alert.alert("Error", "Some error is there!!");
-    }
-  }
-
-  const handleDeleteNoteRequest = () => {
-    Alert.alert("Are you sure you want to delete?", "This will delete this note.", [{ text: "Cancel" }, { text: "OK", onPress: onDeleteConfirm }], { cancelable: true });
-  }
-
-  const shareNote = async () => {
-    await Share.share({ message: formData.text });
-  }
-
-  const copyToClipboard = async () => {
-    await Clipboard.setStringAsync(formData.text);
-    ToastAndroid.show("Note's text copied", ToastAndroid.SHORT);
-  };
-
   const toggleBookmark = async () => {
     try {
       const newNotesArr = notes.map(note => {
@@ -106,56 +74,8 @@ const UpdateNote = () => {
     }
   }
 
-  const togglePin = async () => {
-    try {
-      const newNotesArr = notes.map(note => {
-        if (note.id !== noteId) return note;
-        return { ...note, isPinned: !note.isPinned };
-      })
-      await storeData("notes", newNotesArr);
-      setNotes(newNotesArr);
-    }
-    catch (err) {
-      Alert.alert("Error", "Some error is there!!");
-    }
-  }
-
-  const cloneNote = async () => {
-    try {
-      const newNote = {
-        id: Math.floor(Math.random() * 10000),
-        text: formData.text,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        labels: note.labels
-      }
-      const newNotesArr = [newNote, ...notes];
-      await storeData("notes", newNotesArr);
-      setNotes(newNotesArr);
-      navigation.navigate("Home");
-      ToastAndroid.show("Note cloned successfully", ToastAndroid.SHORT);
-    }
-    catch (err) {
-      Alert.alert("Error", "Some error is there!!");
-    }
-  }
-
-  const changeNoteColor = async color => {
-    try {
-      const newNotesArr = notes.map(note => {
-        if (note.id !== noteId) return note;
-        return { ...note, color };
-      })
-      await storeData("notes", newNotesArr);
-      setNotes(newNotesArr);
-    }
-    catch (err) {
-      Alert.alert("Error", "Some error is there!!");
-    }
-  }
-
   const updatedAt = convertToXTimeAgo(note.updatedAt);
-
+  const isReminderTimePassed = new Date(note.reminder?.dateTime).getTime() < new Date().getTime();
 
   return (
     <View style={{ flex: 1 }}>
@@ -165,6 +85,15 @@ const UpdateNote = () => {
             <Text key={label} style={{ margin: 5, padding: 5, backgroundColor: "#eee", color: "#666", borderRadius: 3, fontSize: 15 }}>{label}</Text>
           ))}
         </View>
+
+        {note.reminder?.dateTime && (
+          <Pressable onPress={() => setNoteReminderModal(true)} style={{ flexDirection: "row", alignSelf: "flex-start", margin: 10, marginTop: 0, paddingVertical: 5, paddingHorizontal: 10, backgroundColor: "#eee", borderRadius: 3, }} android_ripple={{ color: "#bbb", radius: 200 }}>
+            <Icon name="alarm-outline" size={20} color="gray" style={{ marginRight: 10 }} />
+            <Text style={[{ color: "#666", fontSize: 15 }, isReminderTimePassed && { textDecorationLine: 'line-through' }]}>
+              {moment(note.reminder.dateTime).format("lll")}
+            </Text>
+          </Pressable>
+        )}
 
         <TextInput value={formData.text} onChangeText={text => handleChange("text", text)} multiline={true} autoFocus style={{ padding: 20, paddingTop: 0, fontSize: 16, color: "#555" }} placeholder="Your note" />
       </View>
@@ -181,58 +110,10 @@ const UpdateNote = () => {
 
 
       <SaveButton onPress={updateNote} bottom={50} />
-
-      <ActionSheet id="noteOptionsActionSheet" defaultOverlayOpacity={0.1} openAnimationSpeed={50} gestureEnabled indicatorStyle={{ height: 5 }}>
-        <View>
-          <ScrollView horizontal contentContainerStyle={{ paddingVertical: 10, paddingHorizontal: 5 }}>
-            {noteColors.map(color => (
-              <Pressable onPress={() => changeNoteColor(color)} key={color} style={{ marginHorizontal: 5, borderRadius: 50, width: 35, height: 35, backgroundColor: color, justifyContent: "center", alignItems: "center", ...(color === "white" && { borderWidth: 1, borderColor: "#eee" }) }}>
-                {note.color === color && (
-                  <Icon name="checkmark" size={25} color="black" />
-                )}
-              </Pressable>
-            ))}
-          </ScrollView>
-
-          <View style={{ borderColor: "#eee", borderBottomWidth: 1 }} />
-
-          <ScrollView horizontal contentContainerStyle={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 5, paddingVertical: 10 }}>
-            {note.labels?.map(label => (
-              <Text key={label} style={{ margin: 5, padding: 5, backgroundColor: "#eee", color: "#666", borderRadius: 3, fontSize: 15 }}>{label}</Text>
-            ))}
-            <Pressable onPress={() => { SheetManager.hide("noteOptionsActionSheet"); navigation.navigate("NoteLabels", { noteId }); }} style={{ marginLeft: 14, backgroundColor: "#eee", paddingVertical: 5, paddingHorizontal: 8, borderRadius: 3 }} android_ripple={{ color: "#bbb", radius: 200 }} >
-              <Text style={{ fontWeight: "500", color: "#666", fontSize: 15 }}>+ Manage labels</Text>
-            </Pressable>
-          </ScrollView>
-
-          <View style={{ borderColor: "#eee", borderBottomWidth: 1 }} />
-
-          {[
-            { onPress: copyToClipboard, iconName: "clipboard-outline", title: "Copy to Clipboard" },
-            { onPress: shareNote, iconName: "share-social-outline", title: "Share" },
-            { onPress: handleDeleteNoteRequest, iconName: "trash-outline", title: "Delete" },
-            { onPress: cloneNote, iconName: "copy-outline", title: "Make a copy" },
-            { onPress: togglePin, iconName: note.isPinned ? "pin" : "pin-outline", title: note.isPinned ? "Unpin" : "Pin" },
-          ]
-            .map(({ onPress, iconName, title }) => (
-              <Pressable key={title} onPress={onPress} style={styles.sheetItem} android_ripple={{ color: "#999", radius: 200 }}>
-                <Icon name={iconName} size={25} color="gray" style={{ marginRight: 15 }} />
-                <Text color="gray">{title}</Text>
-              </Pressable>
-            ))}
-        </View>
-      </ActionSheet>
-
+      <NoteOptionsActionSheet {...{ noteId, formData }} />
+      <NoteReminderModal {...{ noteReminderModal, setNoteReminderModal, noteId }} />
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  sheetItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 15,
-  }
-});
 
 export default UpdateNote

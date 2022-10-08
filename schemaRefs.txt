@@ -6,4 +6,5 @@ Note
   updatedAt
   isBookmarked
   isPinned
-  labels: []
+  labels: [],
+  reminder: {dateTime, notifId}
