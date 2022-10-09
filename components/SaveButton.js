@@ -3,9 +3,9 @@ import React from 'react'
 import theme from '../style/theme';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const SaveButton = ({ onPress, right, bottom }) => {
+const SaveButton = ({ onPress, right, bottom, isVisible = true }) => {
   return (
-    <Pressable onPress={onPress} style={styles(right, bottom).buttonStyle} android_ripple={{ color: "#ccc", radius: 25 }}>
+    <Pressable onPress={onPress} style={styles(right, bottom, isVisible).buttonStyle} android_ripple={{ color: "#ccc", radius: 25 }}>
       <View>
         <Icon name="checkmark" size={25} color="white" />
       </View>
@@ -15,7 +15,7 @@ const SaveButton = ({ onPress, right, bottom }) => {
 
 export default SaveButton
 
-const styles = (right, bottom) => StyleSheet.create({
+const styles = (right, bottom, isVisible) => StyleSheet.create({
   buttonStyle: {
     position: "absolute",
     bottom: bottom || 20,
@@ -27,6 +27,7 @@ const styles = (right, bottom) => StyleSheet.create({
     borderRadius: 50,
     justifyContent: "center",
     alignItems: "center",
+    transform: [{ scale: isVisible ? 1 : 0 }]
   }
 })
 

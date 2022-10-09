@@ -17,7 +17,7 @@ const Home = () => {
   return (
     <>
       <NotesPageHeader {...{ selectedNotes, setSelectedNotes, setFilteredNotes, isSearchMode, setIsSearchMode, searchValue, setSearchValue }} />
-      <View style={{ flex: 1, backgroundColor: "white" }}>
+      <View style={{ flex: 1 }}>
         <Notes {...{ selectedNotes, setSelectedNotes, filteredNotes, isSearchMode, setIsSearchMode, searchValue }} />
         <AddButton />
       </View>

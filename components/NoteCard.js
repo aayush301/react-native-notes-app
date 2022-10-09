@@ -5,8 +5,9 @@ import { PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-
 import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { convertToXTimeAgo } from '../utils/dateformat';
 import moment from 'moment';
+import theme from '../style/theme';
 
-const NoteCard = ({ note, handlePress, handleLongPress, deleteNote, isAddedInSelection = false }) => {
+const NoteCard = ({ note, handlePress, handleLongPress, moveNoteToTrash, isAddedInSelection = false }) => {
 
   const { width: SCREEN_WIDTH } = Dimensions.get("window");
   const TRANSLATE_X_THRESHOLD = -SCREEN_WIDTH * 0.2;
@@ -20,7 +21,7 @@ const NoteCard = ({ note, handlePress, handleLongPress, deleteNote, isAddedInSel
       const shouldBeRemoved = translateX.value < TRANSLATE_X_THRESHOLD;
       if (shouldBeRemoved) {
         translateX.value = withTiming(-SCREEN_WIDTH, { duration: 100 }, (isFinished) => {
-          if (isFinished) runOnJS(deleteNote)(note.id);
+          if (isFinished) runOnJS(moveNoteToTrash)(note.id);
         });
       } else {
         translateX.value = withTiming(0);
@@ -37,7 +38,7 @@ const NoteCard = ({ note, handlePress, handleLongPress, deleteNote, isAddedInSel
   const isReminderTimePassed = new Date(note.reminder?.dateTime).getTime() < new Date().getTime();
 
   return (
-    <View style={{ backgroundColor: "#ddd" }}>
+    <View style={{ marginBottom: 20, marginHorizontal: 10 }}>
       <GestureHandlerRootView>
         <PanGestureHandler onGestureEvent={panGesture}>
           <Animated.View style={rStyle}>
@@ -48,7 +49,7 @@ const NoteCard = ({ note, handlePress, handleLongPress, deleteNote, isAddedInSel
               style={styles({ isAddedInSelection }).noteCard}
             >
               <View style={{ flexDirection: "row", alignItems: "center", marginTop: 5 }}>
-                {note.color !== "white" && (
+                {note.color && (
                   <View style={{ marginHorizontal: 5, borderRadius: 500, width: 10, height: 10, backgroundColor: note.color }}></View>
                 )}
                 <Text style={{ flex: 1, color: "#999", fontSize: 13 }}>{convertToXTimeAgo(note.updatedAt)}</Text>
@@ -93,15 +94,17 @@ export default NoteCard
 
 const styles = ({ isAddedInSelection }) => StyleSheet.create({
   noteCard: [{
-    borderBottomWidth: 1,
-    borderBottomColor: "#e4e4e4",
+    borderRadius: 3,
     paddingHorizontal: 15,
     paddingTop: 10,
     paddingBottom: 15,
+    backgroundColor: "white",
   },
   isAddedInSelection ? {
-    backgroundColor: "#eee"
+    borderWidth: 2,
+    borderColor: theme.PRIMARY_COLOR,
   } : {
-    backgroundColor: "#fff",
+    borderBottomWidth: 2,
+    borderBottomColor: "#e4e4e4",
   }]
 })

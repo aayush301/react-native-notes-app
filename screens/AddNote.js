@@ -36,7 +36,6 @@ const AddNote = () => {
       const newNote = {
         id: Math.floor(Math.random() * 10000),
         text: formData.text,
-        color: "white",
         createdAt: new Date(),
         updatedAt: new Date(),
         labels: []

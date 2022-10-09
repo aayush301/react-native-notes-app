@@ -23,19 +23,19 @@ const UpdateNote = () => {
   const note = notes.find(note => note.id === noteId);
 
   useEffect(() => {
-    setFormData({ text: note.text || "" });
-  }, [note.text]);
+    setFormData({ text: note?.text || "" });
+  }, [note?.text]);
 
   useEffect(() => {
     const backAction = () => {
       if (!isFocussed) return false;
-      if (formData.text === "" || formData.text === note.text) return false;
+      if (formData.text === "" || formData.text === note?.text) return false;
       Alert.alert("Your changes have not been saved.", "Do you want to save it?", [{ text: "Yes", onPress: updateNote }, { text: "No", onPress: navigation.goBack }], { cancelable: true });
       return true;
     }
     BackHandler.addEventListener("hardwareBackPress", backAction);
     return () => BackHandler.removeEventListener("hardwareBackPress", backAction);
-  }, [isFocussed, formData, navigation, updateNote, note.text]);
+  }, [isFocussed, formData, navigation, updateNote, note?.text]);
 
 
   const handleChange = (name, value) => {
@@ -108,10 +108,12 @@ const UpdateNote = () => {
         </Pressable>
       </View>
 
-
-      <SaveButton onPress={updateNote} bottom={50} />
+      <SaveButton onPress={updateNote} bottom={50} isVisible={formData.text !== note?.text} />
       <NoteOptionsActionSheet {...{ noteId, formData }} />
-      <NoteReminderModal {...{ noteReminderModal, setNoteReminderModal, noteId }} />
+
+      {note.reminder?.dateTime && (
+        <NoteReminderModal {...{ noteReminderModal, setNoteReminderModal, noteId }} />
+      )}
     </View>
   )
 }
