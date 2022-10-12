@@ -1,4 +1,4 @@
-import { Alert, BackHandler, FlatList, Text, ToastAndroid, View } from 'react-native'
+import { Alert, BackHandler, Text, ToastAndroid, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { useGlobalContext } from '../context/context';
 import theme from '../style/theme';
@@ -6,16 +6,12 @@ import { useEffect } from 'react';
 import React from 'react';
 import NoteCard from './NoteCard';
 import { getData, storeData } from '../utils/storage';
+import DraggableFlatList from 'react-native-draggable-flatlist'
 
 
 const Notes = ({ selectedNotes, setSelectedNotes, filteredNotes, isSearchMode, setIsSearchMode }) => {
   const { notes, setNotes } = useGlobalContext();
   const navigation = useNavigation();
-
-  useEffect(() => {
-    setSelectedNotes([]);
-  }, [notes, setSelectedNotes]);
-
 
   useEffect(() => {
     const backAction = () => {
@@ -64,6 +60,7 @@ const Notes = ({ selectedNotes, setSelectedNotes, filteredNotes, isSearchMode, s
       const newNotesArr = notes.filter(note => note.id !== noteId);
       await storeData("notes", newNotesArr);
       setNotes(newNotesArr);
+      setSelectedNotes([]);
       ToastAndroid.show("Note moved to trash", ToastAndroid.SHORT);
     }
     catch (err) {
@@ -72,15 +69,29 @@ const Notes = ({ selectedNotes, setSelectedNotes, filteredNotes, isSearchMode, s
     }
   }
 
+  const changeOrderOfNotes = async ({ data }) => {
+    try {
+      const newNotesArr = data;
+      if (newNotesArr.length === notes.length && JSON.stringify(newNotesArr) === JSON.stringify(notes)) return;
+      setNotes(newNotesArr);
+      await storeData("notes", newNotesArr);
+    }
+    catch (err) {
+      console.log(err);
+      Alert.alert("Error", "Some error is there!!");
+    }
+  }
 
   const getFlatList = notes => {
     const notesCopy = [...notes.filter(note => note.isPinned), ...notes.filter(note => !note.isPinned)];
-    return <FlatList
+    return <DraggableFlatList
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={{ paddingBottom: 200 }}
       data={notesCopy}
       keyExtractor={note => note.id}
-      renderItem={({ item: note }) => <NoteCard {...{ note, handlePress, handleLongPress, moveNoteToTrash }} isAddedInSelection={selectedNotes.includes(note.id)} />}
+      renderItem={({ item: note, drag, isActive }) => <NoteCard {...{ note, drag, isActive, handlePress, handleLongPress, moveNoteToTrash }} isAddedInSelection={selectedNotes.includes(note.id)} />}
+      onDragEnd={changeOrderOfNotes}
+      autoscrollThreshold={100}
     />
   }
 

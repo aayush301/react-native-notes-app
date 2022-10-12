@@ -107,17 +107,16 @@ const NoteLabels = () => {
         </Pressable>
       )}
 
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 65, }} keyboardShouldPersistTaps="always">
+      <ScrollView contentContainerStyle={{ paddingBottom: 65, flex: 1, flexDirection: "row", flexWrap: "wrap" }} keyboardShouldPersistTaps="always">
         {reorderedLabels.map(label => (
-          <Pressable key={label} onPress={() => toggleTempLabelForNote(label)} android_ripple={{ color: "#bbb", radius: 200 }}>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 35, paddingVertical: 10 }}>
-              <Text style={{ color: "#666", fontSize: 17 }}>{label}</Text>
-              {tempMarkedLabels.includes(label) ? (
-                <Icon name='checkmark-circle' style={{ color: "teal", fontSize: 25 }} />
-              ) : (
-                <Icon name='checkmark-circle-outline' style={{ color: "#ccc", fontSize: 25 }} />
-              )}
-            </View>
+          <Pressable key={label}
+            onPress={() => toggleTempLabelForNote(label)}
+            style={{ margin: 10, paddingVertical: 5, paddingHorizontal: 10, borderRadius: 3, backgroundColor: tempMarkedLabels.includes(label) ? "#0193fe" : "#dff6ff" }}
+            android_ripple={{ color: theme.PRIMARY_COLOR, radius: 200 }}
+          >
+            <Text style={{ color: tempMarkedLabels.includes(label) ? "white" : theme.PRIMARY_COLOR, fontSize: 17 }}>
+              {label}
+            </Text>
           </Pressable>
         ))}
       </ScrollView>

@@ -1,7 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { GlobalContextProvider } from './context/context';
-import theme from './style/theme';
 import * as screens from './screens';
 import React from 'react'
 import useNotifications from './Notifications/useNotifications';
