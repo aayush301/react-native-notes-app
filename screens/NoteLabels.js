@@ -101,13 +101,13 @@ const NoteLabels = () => {
 
       <Text style={{ color: "#666", margin: 10 }}>{labels.length} total, {tempMarkedLabels.length} selected</Text>
 
-      {labelInput !== "" && !note.labels.includes(labelInput) && (
+      {labelInput !== "" && !labels.includes(labelInput) && (
         <Pressable onPress={createAndAddLabel} style={{ margin: 20 }}>
           <Text style={{ color: theme.PRIMARY_COLOR, fontWeight: "500" }}>+ Create and add label `{labelInput}`</Text>
         </Pressable>
       )}
 
-      <ScrollView contentContainerStyle={{ paddingBottom: 65, flex: 1, flexDirection: "row", flexWrap: "wrap" }} keyboardShouldPersistTaps="always">
+      <ScrollView contentContainerStyle={{ paddingBottom: 65, flexDirection: "row", flexWrap: "wrap" }} keyboardShouldPersistTaps="always">
         {reorderedLabels.map(label => (
           <Pressable key={label}
             onPress={() => toggleTempLabelForNote(label)}

@@ -31,8 +31,11 @@ const NoteReminderModal = ({ noteReminderModal, setNoteReminderModal, noteId }) 
     setInputDateTime(currentDate);
   };
 
-  const setReminderForNote = async () => {
+  const setOrChangeReminderForNote = async () => {
     try {
+      if (newOrEditMode === "edit") {
+        await cancelNotification(note.reminder.notifId);
+      }
       const notifId = await scheduleReminderNotification({ note, dateTime: inputDateTime });
       const newNotesArr = notes.map(note => {
         if (note.id !== noteId) return note;
@@ -90,7 +93,7 @@ const NoteReminderModal = ({ noteReminderModal, setNoteReminderModal, noteId }) 
                 <Text style={{ color: "blue", fontSize: 15 }}>Cancel</Text>
               </Pressable>
 
-              <Pressable onPress={setReminderForNote} style={{ padding: 10 }} android_ripple={{ color: "#bbb", radius: 60 }}>
+              <Pressable onPress={setOrChangeReminderForNote} style={{ padding: 10 }} android_ripple={{ color: "#bbb", radius: 60 }}>
                 <Text style={{ color: "blue", fontSize: 15 }}>Set</Text>
               </Pressable>
             </View>

@@ -13,18 +13,22 @@ A notes app built using React native for cross-platform mobile devices.
 
 ## Features
 ### User-oriented features
-- Add notes
+- Create notes
 - View notes
 - Update notes
 - Select multiple notes
 - Delete notes
 - Search notes
+- Sort notes
 - Copy notes
 - Share notes
 - Clone notes
-- Bookmark notes
 - Pin notes
+- Bookmark notes
 - Color notes
+- Add labels to notes
+- Add reminders to notes
+
 
 ### Developer-oriented features
 - Android ripple effect
@@ -40,7 +44,7 @@ A notes app built using React native for cross-platform mobile devices.
 - Use of React navigation library for making multiple screens
 - Use of ScrollView for scrollable components
 - Use of Toast in android
-
+- 
 
 ## Tools and Technologies
 - React

@@ -10,7 +10,7 @@ import theme from '../style/theme';
 const NoteCard = ({ note, drag, isActive, handlePress, handleLongPress, moveNoteToTrash, isAddedInSelection = false }) => {
 
   const { width: SCREEN_WIDTH } = Dimensions.get("window");
-  const TRANSLATE_X_THRESHOLD = -SCREEN_WIDTH * 0.2;
+  const TRANSLATE_X_THRESHOLD = -SCREEN_WIDTH * 0.4;
   const translateX = useSharedValue(0);
 
   const panGesture = useAnimatedGestureHandler({
@@ -39,15 +39,16 @@ const NoteCard = ({ note, drag, isActive, handlePress, handleLongPress, moveNote
 
   return (
     <View style={[{ marginBottom: 20, marginHorizontal: 10 }, isActive && { transform: [{ scale: 1.04 }] }]}>
-      <Pressable
-        onPress={() => handlePress(note.id)}
-        onLongPress={() => { handleLongPress(note.id); drag(); }}
-        android_ripple={{ color: "#bbb", radius: 200 }}
-        style={styles({ isAddedInSelection }).noteCard}
-      >
-        <GestureHandlerRootView>
-          <PanGestureHandler onGestureEvent={panGesture} activeOffsetX={-10}>
-            <Animated.View style={rStyle}>
+      <GestureHandlerRootView>
+        <PanGestureHandler onGestureEvent={panGesture} activeOffsetX={-10}>
+          <Animated.View style={rStyle}>
+            <Pressable
+              onPress={() => handlePress(note.id)}
+              onLongPress={() => { handleLongPress(note.id); drag(); }}
+              android_ripple={{ color: "#bbb", radius: 200 }}
+              style={styles({ isAddedInSelection }).noteCard}
+              delayLongPress={100}
+            >
               <View>
                 <View style={{ flexDirection: "row", alignItems: "center", marginTop: 5 }}>
                   {note.color && (
@@ -81,10 +82,10 @@ const NoteCard = ({ note, drag, isActive, handlePress, handleLongPress, moveNote
 
                 <Text numberOfLines={5} style={{ color: "#555", fontSize: 15, marginTop: 10 }}> {note.text} </Text>
               </View>
-            </Animated.View>
-          </PanGestureHandler>
-        </GestureHandlerRootView>
-      </Pressable>
+            </Pressable>
+          </Animated.View>
+        </PanGestureHandler>
+      </GestureHandlerRootView>
     </View>
   );
 }

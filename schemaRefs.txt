@@ -1,10 +1,18 @@
-Note
+notes = Array of notes
+Each note has following schema:
+{
   id
   text
   color
-  createdAt
-  updatedAt
   isBookmarked
   isPinned
   labels: [],
   reminder: {dateTime, notifId}
+  createdAt
+  updatedAt
+}
+
+trashNotes = Array of notes
+labels = array of label strings
+
+  

@@ -86,7 +86,7 @@ const Notes = ({ selectedNotes, setSelectedNotes, filteredNotes, isSearchMode, s
     const notesCopy = [...notes.filter(note => note.isPinned), ...notes.filter(note => !note.isPinned)];
     return <DraggableFlatList
       keyboardShouldPersistTaps="handled"
-      contentContainerStyle={{ paddingBottom: 200 }}
+      contentContainerStyle={{ paddingTop: 5, paddingBottom: 200 }}
       data={notesCopy}
       keyExtractor={note => note.id}
       renderItem={({ item: note, drag, isActive }) => <NoteCard {...{ note, drag, isActive, handlePress, handleLongPress, moveNoteToTrash }} isAddedInSelection={selectedNotes.includes(note.id)} />}
