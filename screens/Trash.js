@@ -1,4 +1,4 @@
-import { View, Text, Alert, ToastAndroid, ScrollView, StyleSheet, Pressable, Modal } from 'react-native'
+import { View, Text, Alert, ToastAndroid, ScrollView, StyleSheet, Pressable } from 'react-native'
 import React, { useCallback, useState } from 'react'
 import { getData, storeData } from '../utils/storage';
 import { useFocusEffect } from '@react-navigation/native';
@@ -7,6 +7,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { convertToXTimeAgo } from '../utils/dateformat';
 import { useGlobalContext } from '../context/context';
+import Modal from '../components/Modal';
 
 
 const TrashNoteCard = ({ note, setNoteModalId }) => {
@@ -182,24 +183,22 @@ const Trash = () => {
 
       )}
 
-      <Modal animationType="fade" transparent={true} visible={noteModalId !== null} onRequestClose={() => setNoteModalId(null)}>
-        <Pressable style={styles.centeredView} onPress={e => e.target == e.currentTarget && setNoteModalId(null)}>
-          <View style={styles.modalView}>
-            <Pressable
-              onPress={() => restoreNote(noteModalId)}
-              style={{ paddingVertical: 10 }}
-              android_ripple={{ color: "#bbb", radius: 200 }}>
-              <Text style={{ color: "blue", textAlign: "center" }}>Restore</Text>
-            </Pressable>
+      <Modal visible={noteModalId !== null} onRequestClose={() => setNoteModalId(null)}>
+        <View>
+          <Pressable
+            onPress={() => restoreNote(noteModalId)}
+            style={{ paddingVertical: 10 }}
+            android_ripple={{ color: "#bbb", radius: 200 }}>
+            <Text style={{ color: "blue", textAlign: "center" }}>Restore</Text>
+          </Pressable>
 
-            <Pressable
-              onPress={() => deleteNotePermanently(noteModalId)}
-              style={{ paddingVertical: 10 }}
-              android_ripple={{ color: "#bbb", radius: 200 }}>
-              <Text style={{ color: "red", textAlign: "center" }}>Delete permanently</Text>
-            </Pressable>
-          </View>
-        </Pressable>
+          <Pressable
+            onPress={() => deleteNotePermanently(noteModalId)}
+            style={{ paddingVertical: 10 }}
+            android_ripple={{ color: "#bbb", radius: 200 }}>
+            <Text style={{ color: "red", textAlign: "center" }}>Delete permanently</Text>
+          </Pressable>
+        </View>
       </Modal>
     </View>
   )
@@ -218,26 +217,5 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderBottomWidth: 2,
     borderBottomColor: "#e4e4e4",
-  },
-
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.2)"
-  },
-  modalView: {
-    backgroundColor: "white",
-    borderRadius: 5,
-    padding: 10,
-    width: "80%",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
   }
 })

@@ -1,0 +1,26 @@
+notes = Array of note
+Each note has following schema:
+{
+  id
+  text
+  color
+  isBookmarked
+  isPinned
+  labels: [],
+  reminder: {dateTime, notifId}
+  createdAt
+  updatedAt
+}
+
+trashNotes = Array of note
+labels = Array of label string
+
+folders = Array of folder
+Each folder has following schema:
+{
+  id
+  name
+  notes: [ids of notes]
+  createdAt
+}
+  

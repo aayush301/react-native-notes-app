@@ -1,5 +1,5 @@
 import { Alert, BackHandler, Text, ToastAndroid, View } from 'react-native'
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { useGlobalContext } from '../context/context';
 import theme from '../style/theme';
 import { useEffect } from 'react';
@@ -12,9 +12,11 @@ import DraggableFlatList from 'react-native-draggable-flatlist'
 const Notes = ({ selectedNotes, setSelectedNotes, filteredNotes, isSearchMode, setIsSearchMode }) => {
   const { notes, setNotes } = useGlobalContext();
   const navigation = useNavigation();
+  const isFocussed = useIsFocused();
 
   useEffect(() => {
     const backAction = () => {
+      if (!isFocussed) return;
       if (selectedNotes.length > 0) {
         setSelectedNotes([]);
         return true;
@@ -27,7 +29,7 @@ const Notes = ({ selectedNotes, setSelectedNotes, filteredNotes, isSearchMode, s
     };
     BackHandler.addEventListener("hardwareBackPress", backAction);
     return () => BackHandler.removeEventListener("hardwareBackPress", backAction);
-  }, [selectedNotes, setSelectedNotes, isSearchMode, setIsSearchMode]);
+  }, [isFocussed, selectedNotes, setSelectedNotes, isSearchMode, setIsSearchMode]);
 
 
   const handlePress = (id) => {
@@ -82,14 +84,22 @@ const Notes = ({ selectedNotes, setSelectedNotes, filteredNotes, isSearchMode, s
     }
   }
 
-  const getFlatList = notes => {
+  const getDraggableFlatList = notes => {
     const notesCopy = [...notes.filter(note => note.isPinned), ...notes.filter(note => !note.isPinned)];
     return <DraggableFlatList
       keyboardShouldPersistTaps="handled"
-      contentContainerStyle={{ paddingTop: 5, paddingBottom: 200 }}
+      contentContainerStyle={{ paddingTop: 5, paddingBottom: 0 }}
       data={notesCopy}
       keyExtractor={note => note.id}
-      renderItem={({ item: note, drag, isActive }) => <NoteCard {...{ note, drag, isActive, handlePress, handleLongPress, moveNoteToTrash }} isAddedInSelection={selectedNotes.includes(note.id)} />}
+      renderItem={({ item: note, drag, isActive }) => (
+        <NoteCard {...{
+          note, isActive, moveNoteToTrash,
+          onPress: () => handlePress(note.id),
+          onLongPress: () => { handleLongPress(note.id); drag(); },
+        }}
+          isAddedInSelection={selectedNotes.includes(note.id)}
+        />
+      )}
       onDragEnd={changeOrderOfNotes}
       autoscrollThreshold={100}
     />
@@ -97,7 +107,7 @@ const Notes = ({ selectedNotes, setSelectedNotes, filteredNotes, isSearchMode, s
 
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
 
       {notes.length === 0 && (
         <View style={{ marginTop: 200, alignItems: "center", justifyContent: "center" }}>
@@ -112,21 +122,23 @@ const Notes = ({ selectedNotes, setSelectedNotes, filteredNotes, isSearchMode, s
           {!isSearchMode ? (
             <>
               <Text style={{ color: theme.PRIMARY_COLOR, fontWeight: "600", fontSize: 15, paddingHorizontal: 10, paddingVertical: 20, borderBottomWidth: 1, borderBottomColor: "#efefef" }}>{notes.length} note{notes.length > 1 && 's'}</Text>
-              {getFlatList(notes)}
+              <View style={{ flex: 1 }}>
+                {getDraggableFlatList(notes)}
+              </View>
             </>
           ) : (
             <>
               {filteredNotes === null ? (
                 <>
                   <Text style={{ color: theme.PRIMARY_COLOR, fontWeight: "600", fontSize: 15, paddingHorizontal: 10, paddingVertical: 20, borderBottomWidth: 1, borderBottomColor: "#efefef" }}>{notes.length} note{notes.length > 1 && 's'}</Text>
-                  {getFlatList(notes)}
+                  {getDraggableFlatList(notes)}
                 </>
               ) : filteredNotes.length === 0 ? (
                 <Text style={{ textAlign: "center", marginTop: 20, fontSize: 18, color: "#888" }}>No note found..</Text>
               ) : (
                 <>
                   <Text style={{ color: theme.PRIMARY_COLOR, paddingHorizontal: 10, paddingVertical: 20 }}>{filteredNotes.length} note{filteredNotes.length > 1 && 's'} found</Text>
-                  {getFlatList(filteredNotes)}
+                  {getDraggableFlatList(filteredNotes)}
                 </>
               )}
             </>

@@ -1,8 +1,9 @@
-import { View, Text, TextInput, Pressable, ToastAndroid, Alert, ScrollView, Modal, StyleSheet } from 'react-native'
+import { View, Text, TextInput, Pressable, ToastAndroid, Alert, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useGlobalContext } from '../context/context';
 import theme from '../style/theme';
 import { storeData } from '../utils/storage';
+import Modal from '../components/Modal';
 
 const LabelsManager = () => {
   const [labelSearchInput, setlabelSearchInput] = useState("");
@@ -121,65 +122,37 @@ const LabelsManager = () => {
 
 
 
-      <Modal animationType="fade" transparent={true} visible={modalLabel !== null} onRequestClose={() => setModalLabel(null)}>
-        <Pressable style={styles.centeredView} onPress={e => e.target == e.currentTarget && setModalLabel(null)}>
-          <View style={styles.modalView}>
+      <Modal visible={modalLabel !== null} onRequestClose={() => setModalLabel(null)}>
+        <View style={{ paddingHorizontal: 10, paddingTop: 15, paddingBottom: 10, }}>
 
-            <TextInput
-              style={{ marginBottom: 10, paddingHorizontal: 5, borderBottomWidth: 1, borderBottomColor: "#ddd", fontSize: 17, color: "#555" }}
-              placeholder='Label..'
-              value={editLabelInput}
-              onChangeText={text => setEditLabelInput(text)} />
+          <TextInput
+            style={{ marginBottom: 10, paddingHorizontal: 5, borderBottomWidth: 1, borderBottomColor: "#ddd", fontSize: 17, color: "#555" }}
+            placeholder='Label..'
+            value={editLabelInput}
+            onChangeText={text => setEditLabelInput(text)} />
 
-            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-              <Pressable
-                disabled={!editLabelInput}
-                onPress={saveLabel}
-                style={{ paddingHorizontal: 15, paddingVertical: 10 }}
-                android_ripple={{ color: "#bbb", radius: 200 }}
-              >
-                <Text style={{ textAlign: "center", fontSize: 16 }}>Save</Text>
-              </Pressable>
+          <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+            <Pressable
+              disabled={!editLabelInput}
+              onPress={saveLabel}
+              style={{ paddingHorizontal: 15, paddingVertical: 10 }}
+              android_ripple={{ color: "#bbb", radius: 200 }}
+            >
+              <Text style={{ textAlign: "center", fontSize: 16 }}>Save</Text>
+            </Pressable>
 
-              <Pressable
-                onPress={deleteLabel}
-                style={{ paddingHorizontal: 15, paddingVertical: 10 }}
-                android_ripple={{ color: "#bbb", radius: 200 }}
-              >
-                <Text style={{ textAlign: "center", color: "red", fontSize: 16 }}>Delete</Text>
-              </Pressable>
-            </View>
+            <Pressable
+              onPress={deleteLabel}
+              style={{ paddingHorizontal: 15, paddingVertical: 10 }}
+              android_ripple={{ color: "#bbb", radius: 200 }}
+            >
+              <Text style={{ textAlign: "center", color: "red", fontSize: 16 }}>Delete</Text>
+            </Pressable>
           </View>
-        </Pressable>
+        </View>
       </Modal>
     </View>
   )
 }
 
 export default LabelsManager
-
-
-const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.2)"
-  },
-  modalView: {
-    backgroundColor: "white",
-    borderRadius: 5,
-    paddingHorizontal: 20,
-    paddingTop: 25,
-    paddingBottom: 20,
-    width: "80%",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
-  }
-})

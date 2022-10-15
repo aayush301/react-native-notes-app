@@ -1,5 +1,5 @@
 import { Alert, Pressable, Text, TextInput, View, ToastAndroid, BackHandler } from 'react-native'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import { storeData } from '../utils/storage';
 import { useGlobalContext } from '../context/context';
@@ -18,6 +18,7 @@ const UpdateNote = () => {
   const { notes, setNotes } = useGlobalContext();
   const [formData, setFormData] = useState({ text: "" });
   const [noteReminderModal, setNoteReminderModal] = useState(false);
+  const reff = useRef();
 
   const noteId = route.params.id;
   const note = notes.find(note => note.id === noteId);
@@ -95,8 +96,16 @@ const UpdateNote = () => {
           </Pressable>
         )}
 
-        <TextInput value={formData.text} onChangeText={text => handleChange("text", text)} multiline={true} autoFocus style={{ padding: 20, paddingTop: 0, fontSize: 16, color: "#555" }} placeholder="Your note" />
+        <TextInput
+          ref={reff}
+          value={formData.text}
+          onChangeText={text => handleChange("text", text)}
+          multiline={true}
+          style={{ paddingHorizontal: 20, paddingBottom: 100, fontSize: 16, color: "#555" }}
+          placeholder="Your note"
+        />
       </View>
+
 
       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", backgroundColor: "#ddd", paddingVertical: 4, paddingHorizontal: 15 }}>
         <Text style={{ color: "#444" }}>Edited {updatedAt}</Text>
