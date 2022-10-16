@@ -1,6 +1,6 @@
 import { View, Text, TextInput, Pressable, Alert, ToastAndroid, ActivityIndicator } from 'react-native'
 import React, { useCallback, useState } from 'react'
-import AddButton from '../components/AddButton';
+import ActionButton from '../components/ActionButton';
 import Modal from '../components/Modal';
 import { getData, storeData } from '../utils/storage';
 import DraggableFlatList from 'react-native-draggable-flatlist';
@@ -77,7 +77,8 @@ const Folders = () => {
   const getDraggableFlatList = folders => {
     return <DraggableFlatList
       keyboardShouldPersistTaps="handled"
-      contentContainerStyle={{ paddingTop: 5, paddingBottom: 200 }}
+      contentContainerStyle={{ paddingTop: 5, paddingBottom: 60 }}
+      containerStyle={{ flex: 1 }}
       data={folders}
       keyExtractor={folder => folder.id}
       renderItem={({ item: folder, drag, isActive }) => <FolderCard {...{ folder, drag, isActive, handlePress, }} />}
@@ -116,7 +117,7 @@ const Folders = () => {
 
 
 
-      <AddButton onPress={() => setCreateFolderModal(true)} />
+      <ActionButton onPress={() => setCreateFolderModal(true)} />
       <Modal visible={createFolderModal} onRequestClose={closeModal}>
         <View>
           <Text style={{ marginVertical: 10, fontWeight: '500', fontSize: 18, textAlign: 'center' }}>New folder</Text>

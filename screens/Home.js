@@ -1,7 +1,7 @@
 import { View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Notes from '../components/Notes'
-import AddButton from '../components/AddButton'
+import ActionButton from '../components/ActionButton'
 import NotesPageHeader from '../components/NotesPageHeader'
 import { useNavigation } from '@react-navigation/native'
 
@@ -21,7 +21,7 @@ const Home = () => {
       <NotesPageHeader {...{ selectedNotes, setSelectedNotes, setFilteredNotes, isSearchMode, setIsSearchMode, searchValue, setSearchValue }} />
       <View style={{ flex: 1 }}>
         <Notes {...{ selectedNotes, setSelectedNotes, filteredNotes, isSearchMode, setIsSearchMode, searchValue }} />
-        <AddButton onPress={() => navigation.navigate("AddNote")} />
+        <ActionButton onPress={() => navigation.navigate("AddNote")} />
       </View>
     </>
   )

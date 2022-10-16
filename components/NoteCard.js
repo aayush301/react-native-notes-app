@@ -31,12 +31,14 @@ const NoteCard = ({ note, isActive = false, onPress = () => { }, onLongPress = (
   const rStyle = useAnimatedStyle(() => ({
     transform: [{
       translateX: translateX.value,
+    }, {
+      scale: withTiming(isActive ? 1.04 : 1, { duration: 100 })
     }]
   }));
 
 
   return (
-    <View style={[{ marginBottom: 20, marginHorizontal: 10 }, isActive && { transform: [{ scale: 1.04 }] }]}>
+    <View style={{ marginBottom: 20, marginHorizontal: 10 }}>
       <GestureHandlerRootView>
         <PanGestureHandler onGestureEvent={panGesture} activeOffsetX={-10}>
           <Animated.View style={rStyle}>
@@ -63,13 +65,13 @@ export default NoteCard
 const styles = ({ isAddedInSelection }) => StyleSheet.create({
   noteCard: [{
     borderRadius: 5,
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
+    borderWidth: 2,
+    borderColor: "#fff"
   },
   isAddedInSelection ? {
-    borderWidth: 2,
     borderColor: theme.PRIMARY_COLOR,
   } : {
-    borderBottomWidth: 2,
     borderBottomColor: "#e4e4e4",
   }]
 })

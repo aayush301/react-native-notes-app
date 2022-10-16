@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { storeData } from '../utils/storage';
 import { useGlobalContext } from '../context/context';
-import SaveButton from '../components/SaveButton';
+import ActionButton from '../components/ActionButton';
 
 const AddNote = () => {
   const navigation = useNavigation();
@@ -57,7 +57,7 @@ const AddNote = () => {
         <TextInput value={formData.text} onChangeText={text => handleChange("text", text)} multiline={true} style={{ padding: 20, fontSize: 16, color: "#555" }} placeholder="Your note" autoFocus />
       </View>
 
-      <SaveButton onPress={saveNote} />
+      <ActionButton iconName='checkmark' onPress={saveNote} isVisible={formData.text !== ""} />
     </View>
   )
 }

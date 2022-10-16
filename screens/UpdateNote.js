@@ -1,31 +1,26 @@
 import { Alert, Pressable, Text, TextInput, View, ToastAndroid, BackHandler } from 'react-native'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import { storeData } from '../utils/storage';
 import { useGlobalContext } from '../context/context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { convertToXTimeAgo } from '../utils/dateformat';
 import { SheetManager } from "react-native-actions-sheet";
-import SaveButton from '../components/SaveButton';
 import NoteOptionsActionSheet from '../components/NoteOptionsActionSheet';
 import moment from 'moment';
 import NoteReminderModal from '../components/NoteReminderModal';
+import ActionButton from '../components/ActionButton';
 
 const UpdateNote = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const isFocussed = useIsFocused();
   const { notes, setNotes } = useGlobalContext();
-  const [formData, setFormData] = useState({ text: "" });
   const [noteReminderModal, setNoteReminderModal] = useState(false);
-  const reff = useRef();
 
   const noteId = route.params.id;
   const note = notes.find(note => note.id === noteId);
-
-  useEffect(() => {
-    setFormData({ text: note?.text || "" });
-  }, [note?.text]);
+  const [formData, setFormData] = useState({ text: note.text });
 
   useEffect(() => {
     const backAction = () => {
@@ -78,6 +73,7 @@ const UpdateNote = () => {
   const updatedAt = convertToXTimeAgo(note.updatedAt);
   const isReminderTimePassed = new Date(note.reminder?.dateTime).getTime() < new Date().getTime();
 
+
   return (
     <View style={{ flex: 1 }}>
       <View style={{ flex: 1, backgroundColor: "#f5f5f5" }}>
@@ -97,7 +93,6 @@ const UpdateNote = () => {
         )}
 
         <TextInput
-          ref={reff}
           value={formData.text}
           onChangeText={text => handleChange("text", text)}
           multiline={true}
@@ -117,7 +112,7 @@ const UpdateNote = () => {
         </Pressable>
       </View>
 
-      <SaveButton onPress={updateNote} bottom={50} isVisible={formData.text !== note?.text} />
+      <ActionButton iconName='checkmark' onPress={updateNote} style={{ bottom: 50 }} isVisible={formData.text !== note?.text} />
       <NoteOptionsActionSheet {...{ noteId, formData }} />
 
       {note.reminder?.dateTime && (

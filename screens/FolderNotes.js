@@ -4,7 +4,7 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import { getData, storeData } from '../utils/storage';
 import theme from '../style/theme';
 import NoteCard from '../components/NoteCard';
-import AddButton from '../components/AddButton';
+import ActionButton from '../components/ActionButton';
 import { useGlobalContext } from '../context/context';
 
 const FolderNotes = () => {
@@ -95,7 +95,7 @@ const FolderNotes = () => {
         </>
       )}
 
-      <AddButton onPress={() => navigation.navigate("NotesSelector", { onNotesSelected, unSelectableNotes: folder.notes.map(note => note.id) })} />
+      <ActionButton onPress={() => navigation.navigate("NotesSelector", { onNotesSelected, unSelectableNotes: folder.notes.map(note => note.id) })} />
     </View>
   )
 }

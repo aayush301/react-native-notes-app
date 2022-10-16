@@ -1,6 +1,6 @@
 import { View, Text, FlatList, Pressable } from 'react-native'
 import React, { useState } from 'react'
-import AddButton from '../components/AddButton'
+import ActionButton from '../components/ActionButton'
 import { useGlobalContext } from '../context/context';
 import NoteCardText from '../components/NoteCardText';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -75,9 +75,7 @@ const NotesSelector = () => {
       <Text style={{ margin: 15, fontSize: 17, fontWeight: '500', color: theme.PRIMARY_COLOR }}>{selectedNotes.length} selected</Text>
       {getFlatList(selectableNotes)}
 
-      {selectedNotes.length > 0 && (
-        <AddButton iconName="checkmark-outline" onPress={onDone} />
-      )}
+      <ActionButton iconName="checkmark-outline" onPress={onDone} isVisible={selectedNotes.length > 0} />
     </View>
   )
 }

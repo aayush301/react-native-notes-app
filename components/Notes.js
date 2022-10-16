@@ -84,11 +84,12 @@ const Notes = ({ selectedNotes, setSelectedNotes, filteredNotes, isSearchMode, s
     }
   }
 
+
   const getDraggableFlatList = notes => {
     const notesCopy = [...notes.filter(note => note.isPinned), ...notes.filter(note => !note.isPinned)];
     return <DraggableFlatList
       keyboardShouldPersistTaps="handled"
-      contentContainerStyle={{ paddingTop: 5, paddingBottom: 0 }}
+      contentContainerStyle={{ paddingTop: 5, paddingBottom: 60 }}
       data={notesCopy}
       keyExtractor={note => note.id}
       renderItem={({ item: note, drag, isActive }) => (

@@ -1,12 +1,12 @@
-import { View, Text, TextInput, Pressable, Alert, ToastAndroid, StyleSheet, BackHandler, ScrollView } from 'react-native'
+import { View, Text, TextInput, Pressable, Alert, ToastAndroid, BackHandler, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import theme from '../style/theme';
 import { useGlobalContext } from '../context/context';
 import { storeData } from '../utils/storage';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import ActionButton from '../components/ActionButton';
 
-const NoteLabels = () => {
+const NoteLabelsManager = () => {
 
   const navigation = useNavigation();
   const route = useRoute();
@@ -121,31 +121,9 @@ const NoteLabels = () => {
         ))}
       </ScrollView>
 
-      {areLabelsModified && (
-        <Pressable onPress={changeLabelsOfNote} style={styles.buttonStyle} android_ripple={{ color: "#ccc", radius: 25 }}>
-          <Icon name="checkmark-circle" size={30} color="white" />
-        </Pressable>
-      )}
-
+      <ActionButton iconName="checkmark-circle" onPress={changeLabelsOfNote} isVisible={areLabelsModified} />
     </View>
   )
 }
 
-export default NoteLabels
-
-
-const styles = StyleSheet.create({
-  buttonStyle: {
-    position: "absolute",
-    bottom: 20,
-    right: 20,
-    width: 50,
-    height: 50,
-    backgroundColor: theme.PRIMARY_COLOR,
-    color: 'white',
-    borderRadius: 50,
-    justifyContent: "center",
-    alignItems: "center",
-  }
-})
-
+export default NoteLabelsManager
