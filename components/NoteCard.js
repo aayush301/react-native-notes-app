@@ -4,6 +4,7 @@ import { PanGestureHandler, GestureHandlerRootView } from 'react-native-gesture-
 import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import theme from '../style/theme';
 import NoteCardText from './NoteCardText';
+import { SharedElement } from 'react-navigation-shared-element';
 
 // "isActive" is used in the situation of dragging the note and to check if currently it is being dragged
 const NoteCard = ({ note, isActive = false, onPress = () => { }, onLongPress = () => { }, moveNoteToTrash, isAddedInSelection = false }) => {
@@ -42,15 +43,17 @@ const NoteCard = ({ note, isActive = false, onPress = () => { }, onLongPress = (
       <GestureHandlerRootView>
         <PanGestureHandler onGestureEvent={panGesture} activeOffsetX={-10}>
           <Animated.View style={rStyle}>
-            <Pressable
-              onPress={onPress}
-              onLongPress={onLongPress}
-              android_ripple={{ color: "#bbb", radius: 200 }}
-              style={styles({ isAddedInSelection }).noteCard}
-              delayLongPress={100}
-            >
-              <NoteCardText note={note} />
-            </Pressable>
+            <SharedElement id={`note.${note.id}`}>
+              <Pressable
+                onPress={onPress}
+                onLongPress={onLongPress}
+                android_ripple={{ color: "#bbb", radius: 200 }}
+                style={styles({ isAddedInSelection }).noteCard}
+                delayLongPress={100}
+              >
+                <NoteCardText note={note} />
+              </Pressable>
+            </SharedElement>
           </Animated.View>
         </PanGestureHandler>
       </GestureHandlerRootView>

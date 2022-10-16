@@ -22,16 +22,17 @@ const FolderCard = ({ folder, drag, isActive, handlePress }) => {
         onLongPress={() => drag()}
         android_ripple={{ color: "#bbb", radius: 200 }}
         delayLongPress={100}
-        style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 15, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: "#ddd" }}
       >
-        <View style={{ flex: 1 }}>
-          <Text style={{ color: "#555", fontSize: 17 }}>{folder.name}</Text>
-          <View style={{ flexDirection: "row", alignItems: "center", marginVertical: 5 }}>
-            <Text style={{ marginRight: 10, color: theme.PRIMARY_COLOR }}>{folder.notes.length} note{folder.notes.length != 1 && 's'}</Text>
-            <Text style={{ flex: 1, color: "#999" }}>{convertToXTimeAgo(folder.createdAt)}</Text>
+        <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 15, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: "#ddd" }}>
+          <View style={{ flex: 1 }}>
+            <Text style={{ color: "#555", fontSize: 17 }}>{folder.name}</Text>
+            <View style={{ flexDirection: "row", alignItems: "center", marginVertical: 5 }}>
+              <Text style={{ marginRight: 10, color: theme.PRIMARY_COLOR }}>{folder.notes.length} note{folder.notes.length != 1 && 's'}</Text>
+              <Text style={{ flex: 1, color: "#999" }}>{convertToXTimeAgo(folder.createdAt)}</Text>
+            </View>
           </View>
+          <Icon name={"chevron-forward-outline"} size={22} color="#888" />
         </View>
-        <Icon name={"chevron-forward-outline"} size={22} color="#888" />
       </Pressable>
     </View>
   )

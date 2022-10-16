@@ -10,6 +10,7 @@ import NoteOptionsActionSheet from '../components/NoteOptionsActionSheet';
 import moment from 'moment';
 import NoteReminderModal from '../components/NoteReminderModal';
 import ActionButton from '../components/ActionButton';
+import { SharedElement } from 'react-navigation-shared-element';
 
 const UpdateNote = () => {
   const navigation = useNavigation();
@@ -76,30 +77,32 @@ const UpdateNote = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ flex: 1, backgroundColor: "#f5f5f5" }}>
-        <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", paddingHorizontal: 15, paddingVertical: 10 }}>
-          {note.labels?.map(label => (
-            <Text key={label} style={{ margin: 5, padding: 5, backgroundColor: "#eee", color: "#666", borderRadius: 3, fontSize: 15 }}>{label}</Text>
-          ))}
+      <SharedElement id={`note.${note.id}`} style={{ flex: 1 }}>
+        <View style={{ flex: 1, backgroundColor: "#f5f5f5" }}>
+          <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", paddingHorizontal: 15, paddingVertical: 10 }}>
+            {note.labels?.map(label => (
+              <Text key={label} style={{ margin: 5, padding: 5, backgroundColor: "#eee", color: "#666", borderRadius: 3, fontSize: 15 }}>{label}</Text>
+            ))}
+          </View>
+
+          {note.reminder?.dateTime && (
+            <Pressable onPress={() => setNoteReminderModal(true)} style={{ flexDirection: "row", alignSelf: "flex-start", margin: 10, marginTop: 0, paddingVertical: 5, paddingHorizontal: 10, backgroundColor: "#eee", borderRadius: 3, }} android_ripple={{ color: "#bbb", radius: 200 }}>
+              <Icon name="alarm-outline" size={20} color="gray" style={{ marginRight: 10 }} />
+              <Text style={[{ color: "#666", fontSize: 15 }, isReminderTimePassed && { textDecorationLine: 'line-through' }]}>
+                {moment(note.reminder.dateTime).format("lll")}
+              </Text>
+            </Pressable>
+          )}
+
+          <TextInput
+            value={formData.text}
+            onChangeText={text => handleChange("text", text)}
+            multiline={true}
+            style={{ paddingHorizontal: 20, paddingBottom: 100, fontSize: 16, color: "#555" }}
+            placeholder="Your note"
+          />
         </View>
-
-        {note.reminder?.dateTime && (
-          <Pressable onPress={() => setNoteReminderModal(true)} style={{ flexDirection: "row", alignSelf: "flex-start", margin: 10, marginTop: 0, paddingVertical: 5, paddingHorizontal: 10, backgroundColor: "#eee", borderRadius: 3, }} android_ripple={{ color: "#bbb", radius: 200 }}>
-            <Icon name="alarm-outline" size={20} color="gray" style={{ marginRight: 10 }} />
-            <Text style={[{ color: "#666", fontSize: 15 }, isReminderTimePassed && { textDecorationLine: 'line-through' }]}>
-              {moment(note.reminder.dateTime).format("lll")}
-            </Text>
-          </Pressable>
-        )}
-
-        <TextInput
-          value={formData.text}
-          onChangeText={text => handleChange("text", text)}
-          multiline={true}
-          style={{ paddingHorizontal: 20, paddingBottom: 100, fontSize: 16, color: "#555" }}
-          placeholder="Your note"
-        />
-      </View>
+      </SharedElement>
 
 
       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", backgroundColor: "#ddd", paddingVertical: 4, paddingHorizontal: 15 }}>
@@ -120,6 +123,16 @@ const UpdateNote = () => {
       )}
     </View>
   )
+}
+
+
+UpdateNote.sharedElements = route => {
+  return [
+    {
+      id: `note.${route.params.id}`,
+      animation: "fade"
+    }
+  ];
 }
 
 export default UpdateNote

@@ -1,13 +1,13 @@
 import { NavigationContainer } from '@react-navigation/native';
 import * as screens from './screens';
 import React from 'react'
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator, DrawerItemList } from '@react-navigation/drawer';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView, Text } from 'react-native';
+import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
+import { CardStyleInterpolators } from '@react-navigation/stack';
 
-
-const Stack = createNativeStackNavigator();
+const Stack = createSharedElementStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const DrawerContent = (props) => {
@@ -26,22 +26,23 @@ const DrawerContent = (props) => {
 const AppNavigator = ({ navRef }) => {
   return (
     <NavigationContainer ref={navRef}>
-      <Stack.Navigator>
-        <Stack.Screen name="Menus" options={{ headerShown: false }}>
-          {() => (
-            <Drawer.Navigator drawerContent={DrawerContent}>
-              <Drawer.Screen name="Home" component={screens.Home} options={{ headerShown: false }} />
-              <Drawer.Screen name="Labels" component={screens.LabelsManager} />
-              <Drawer.Screen name="Folders" component={screens.Folders} />
-              <Drawer.Screen name="Trash" component={screens.Trash} />
-            </Drawer.Navigator>
-          )}
-        </Stack.Screen>
+      <Stack.Navigator screenOptions={{
+        cardStyleInterpolator: CardStyleInterpolators.forBottomSheetAndroid,
+      }}>
+        <Stack.Screen name="Menus" options={{ headerShown: false }} component={() => (
+          <Drawer.Navigator drawerContent={DrawerContent}>
+            <Drawer.Screen name="Home" component={screens.Home} options={{ headerShown: false }} />
+            <Drawer.Screen name="Labels" component={screens.LabelsManager} />
+            <Drawer.Screen name="Folders" component={screens.Folders} />
+            <Drawer.Screen name="Trash" component={screens.Trash} />
+          </Drawer.Navigator>
+        )} />
         <Stack.Screen name="AddNote" component={screens.AddNote} options={{ title: "New note" }} />
         <Stack.Screen name="FolderNotes" component={screens.FolderNotes} options={{ title: "Folder" }} />
         <Stack.Screen name="NoteLabels" component={screens.NoteLabelsManager} options={{ title: "Manage labels" }} />
         <Stack.Screen name="NotesSelector" component={screens.NotesSelector} options={{ title: "Select notes" }} />
-        <Stack.Screen name="UpdateNote" component={screens.UpdateNote} options={{ title: "Note" }} />
+        <Stack.Screen name="UpdateNote" component={screens.UpdateNote} options={{ title: "Note" }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   )

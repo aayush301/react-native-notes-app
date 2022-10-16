@@ -35,7 +35,7 @@ const FolderNotes = () => {
   }, [fetchFolderWithNotes]);
 
   const handlePress = (noteId) => {
-    navigation.navigate("UpdateNote", { noteId });
+    navigation.navigate("UpdateNote", { id: noteId });
   }
 
 
