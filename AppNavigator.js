@@ -38,7 +38,7 @@ const AppNavigator = ({ navRef }) => {
           </Drawer.Navigator>
         )} />
         <Stack.Screen name="AddNote" component={screens.AddNote} options={{ title: "New note" }} />
-        <Stack.Screen name="FolderNotes" component={screens.FolderNotes} options={{ title: "Folder" }} />
+        <Stack.Screen name="FolderNotes" component={screens.FolderNotes} options={{ title: "Folder", headerShown: false }} />
         <Stack.Screen name="NoteLabels" component={screens.NoteLabelsManager} options={{ title: "Manage labels" }} />
         <Stack.Screen name="NotesSelector" component={screens.NotesSelector} options={{ title: "Select notes" }} />
         <Stack.Screen name="UpdateNote" component={screens.UpdateNote} options={{ title: "Note" }}

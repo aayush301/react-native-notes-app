@@ -1,18 +1,21 @@
 # React Native Notes App
+
 A notes app built using React native for cross-platform mobile devices.
 
 ## Table of Contents
-* [Features](#features)
-* [Tools and Technologies](#tools-and-technologies)
-* [Prerequisites](#prerequisites)
-* [Installation and setup](#installation-and-setup)
-* [Contributing](#contributing)
-* [Useful Links](#useful-links)
-* [Contact](#contact)
 
+- [Features](#features)
+- [Tools and Technologies](#tools-and-technologies)
+- [Prerequisites](#prerequisites)
+- [Installation and setup](#installation-and-setup)
+- [Contributing](#contributing)
+- [Useful Links](#useful-links)
+- [Contact](#contact)
 
 ## Features
+
 ### User-oriented features
+
 - Create notes
 - View notes
 - Update notes
@@ -29,8 +32,8 @@ A notes app built using React native for cross-platform mobile devices.
 - Add labels to notes
 - Add reminders to notes
 
-
 ### Developer-oriented features
+
 - Android ripple effect
 - Conditional addition of property to object (JS concept)
 - Custom Back button handlers
@@ -44,44 +47,40 @@ A notes app built using React native for cross-platform mobile devices.
 - Use of React navigation library for making multiple screens
 - Use of ScrollView for scrollable components
 - Use of Toast in android
-- 
 
 ## Tools and Technologies
+
 - React
 - React Native
 - CSS
 - Eslint
 
-
 ## Prerequisites
-- Node.js must be installed on the system.
-- You should have a code editor (preferably VS Code)
 
+- Node.js
+- A code editor (preferably VS Code)
 
 ## Installation and Setup
-1. Download the source code in your desired location on your system.
-2. Open the code in your code editor.
-3. Go to terminal and type the following command:
-    ```sh
-    npm install
-    ```
-    This will install all the dependencies and dev-dependencies required in the project.
 
-4. Go to terminal and type the following command:
-    ```sh
-    npm start
-    ```
-    This will start the application.
+1. Install all the dependencies and dev-dependencies
 
-5. Download expo app on the mobile device and scan the QR code generated on terminal.
-6. For running on browser, press w on terminal and it will launch the browser.
+   ```sh
+   npm install
+   ```
 
+2. Start the application
 
+   ```sh
+   npm start
+   ```
+
+3. Download expo app on the mobile device and scan the QR code generated on terminal.
+4. For running on browser, press w on terminal and it will launch the browser.
 
 ## Contributing
+
 - Feature Requests:  
   Want a new feature or improve already existing feature in the app? Feel free to create an issue at [issue tracker](https://github.com/aayush301/react-native-notes-app/issues) about the feature you want to see in the app.
-  
 - Bug reports:  
   Found a bug in the application? Feel free to create a new issue at [issue tracker](https://github.com/aayush301/react-native-notes-app/issues) stating the clear description of the bug.
 
@@ -91,17 +90,20 @@ A notes app built using React native for cross-platform mobile devices.
 - Security vulnerabilities:  
   Discovered a security vulnerability within this project? Please send an email to Aayush (author) at aayush5521186@gmail.com.
 
-
 ## Useful Links
+
 - This project
+
   - Github Repo: https://github.com/aayush301/react-native-notes-app
 
 - Official Docs
+
   - Reactjs docs: https://reactjs.org/docs/getting-started.html
   - npmjs docs: https://docs.npmjs.com/
   - Github docs: https://docs.github.com/en/get-started/quickstart/hello-world
 
 - Download links
+
   - Nodejs download: https://nodejs.org/
   - VS Code download: https://code.visualstudio.com/
 
@@ -109,7 +111,7 @@ A notes app built using React native for cross-platform mobile devices.
   - Git cheatsheet: https://education.github.com/git-cheat-sheet-education.pdf
   - VS Code keyboard shortcuts: https://code.visualstudio.com/shortcuts/keyboard-shortcuts-windows.pdf
 
-
 ## Contact
+
 - Email: aayush5521186@gmail.com
 - Linkedin: https://www.linkedin.com/in/aayush12/
